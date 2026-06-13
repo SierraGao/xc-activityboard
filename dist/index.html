@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>活动列表 - 抖B社群活动公告栏</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <header class="site-header">
+      <h1 class="site-title">抖B社群活动公告栏</h1>
+    </header>
+
+    <main>
+
+      <input type="text" class="search-box" placeholder="搜索活动名称..." autocomplete="off">
+      <div class="filter-bar">
+        <button class="filter-tag active" data-status="active">进行中</button>
+        <button class="filter-tag" data-status="upcoming">待开始</button>
+        <button class="filter-tag" data-status="prize">可兑奖</button>
+        <button class="filter-tag" data-status="ended">已结束</button>
+        <button class="filter-tag" data-status="all">全部</button>
+      </div>
+      <div class="activity-list">
+        <a href="detail/act_001.html" class="activity-card" data-name="618年中大促（2026）" data-status="active}">
+          <div class="card-info">
+            <div class="card-name">618年中大促（2026）</div>
+            <div class="card-time">2026.06.18截止</div>
+          </div>
+          <span class="status-tag active-tag">进行中</span>
+        </a>
+
+        <a href="detail/act_002.html" class="activity-card" data-name="积分体系" data-status="active}">
+          <div class="card-info">
+            <div class="card-name">积分体系</div>
+            <div class="card-time">长期活动</div>
+          </div>
+          <span class="status-tag active-tag">进行中</span>
+        </a>
+
+        <a href="detail/act_003.html" class="activity-card" data-name="618活动（2025）" data-status="ended}">
+          <div class="card-info">
+            <div class="card-name">618活动（2025）</div>
+            <div class="card-time">2025.06.25截止</div>
+          </div>
+          <span class="status-tag ended-tag">已结束</span>
+        </a></div>
+
+    </main>
+
+    <footer class="site-footer">
+      <p>&copy; 2026 抖B社群活动公告栏</p>
+    </footer>
+  </div>
+  <script src="js/main.js"></script>
+</body>
+</html>

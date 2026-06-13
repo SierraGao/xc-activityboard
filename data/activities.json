@@ -1,0 +1,52 @@
+{
+  "activities": [
+    {
+      "id": "act_001",
+      "name": "618年中大促（2026）",
+      "activityStartDate": "2026-06-01",
+      "activityEndDate": "2026-06-18",
+      "prizeStartDate": "2026-06-18",
+      "prizeEndDate": "2026-06-25",
+      "rules": "1. 活动期间下单满199元即可参与抽奖\n2. 每人每天限参与1次\n3. 中奖后请在7天内领取",
+      "entry": "<p>点击链接进入活动页面：<a href='https://example.com/618'>https://example.com/618</a></p>",
+      "prizeMethod": "系统自动发放至账户，请在「我的-优惠券」中查看",
+      "prizes": "一等奖：满299减100优惠券 × 10份\n二等奖：满199减50优惠券 × 50份\n三等奖：满99减20优惠券 × 200份",
+      "remark": "<p>本活动最终解释权归抖B社群所有</p><p>如有疑问请联系群管理员</p>",
+      "isLongTerm": false,
+      "createdAt": "2026-06-14T10:00:00",
+      "updatedAt": "2026-06-14T10:00:00"
+    },
+    {
+      "id": "act_002",
+      "name": "积分体系",
+      "activityStartDate": "2026-01-01",
+      "activityEndDate": "",
+      "prizeStartDate": "",
+      "prizeEndDate": "",
+      "rules": "1. 每日签到可获得10积分\n2. 下单1元=1积分\n3. 积分可兑换优惠券和实物奖品",
+      "entry": "<p>在抖B APP中点击「我的-积分中心」进入</p>",
+      "prizeMethod": "积分商城自行兑换",
+      "prizes": "100积分：5元无门槛券\n500积分：30元优惠券\n1000积分：精美周边礼品",
+      "remark": "",
+      "isLongTerm": true,
+      "createdAt": "2026-01-01T00:00:00",
+      "updatedAt": "2026-01-01T00:00:00"
+    },
+    {
+      "id": "act_003",
+      "name": "618活动（2025）",
+      "activityStartDate": "2025-06-01",
+      "activityEndDate": "2025-06-18",
+      "prizeStartDate": "2025-06-18",
+      "prizeEndDate": "2025-06-25",
+      "rules": "1. 活动期间下单满199元即可参与\n2. 每人限参与1次",
+      "entry": "",
+      "prizeMethod": "人工联系发放",
+      "prizes": "满299减100优惠券",
+      "remark": "本活动已结束，仅供参考",
+      "isLongTerm": false,
+      "createdAt": "2025-06-01T10:00:00",
+      "updatedAt": "2025-06-25T10:00:00"
+    }
+  ]
+}

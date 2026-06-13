@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= isNew ? '新增活动' : '编辑活动' %> - 后台管理</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="admin-header">
+      <h1><%= isNew ? '新增活动' : '编辑活动' %></h1>
+      <a href="/admin" class="btn btn-outline btn-sm">← 返回</a>
+    </div>
+
+    <form method="POST" action="<%= isNew ? '/admin/new' : '/admin/edit/' + activity.id %>" id="editForm">
+      <div class="form-group">
+        <label>活动名称 <span class="required">*</span></label>
+        <input type="text" name="name" value="<%= activity ? activity.name : '' %>" required>
+      </div>
+      <div class="form-group">
+        <label>活动开始时间</label>
+        <input type="datetime-local" name="activityStartDate" value="<%= activity ? activity.activityStartDate : '' %>">
+      </div>
+      <div class="form-group">
+        <label>活动结束时间</label>
+        <input type="datetime-local" name="activityEndDate" value="<%= activity ? activity.activityEndDate : '' %>">
+        <div class="hint">长期活动可不填结束时间</div>
+      </div>
+      <div class="form-group">
+        <label>兑奖开始时间</label>
+        <input type="datetime-local" name="prizeStartDate" value="<%= activity ? activity.prizeStartDate : '' %>">
+      </div>
+      <div class="form-group">
+        <label>兑奖结束时间</label>
+        <input type="datetime-local" name="prizeEndDate" value="<%= activity ? activity.prizeEndDate : '' %>">
+      </div>
+
+      <% var fieldDefs = [
+        { key: 'rules', label: '活动规则', placeholder: '请输入活动规则...' },
+        { key: 'entry', label: '活动入口', placeholder: '请输入活动入口（支持链接、图片）...' },
+        { key: 'prizeMethod', label: '兑奖方式', placeholder: '请输入兑奖方式...' },
+        { key: 'prizes', label: '活动奖品', placeholder: '请输入活动奖品...' },
+        { key: 'remark', label: '备注', placeholder: '请输入备注...' }
+      ];
+      fieldDefs.forEach(function(f) { %>
+      <div class="form-group">
+        <label><%= f.label %></label>
+        <div class="richtext-editor" data-field="<%= f.key %>">
+          <div class="richtext-toolbar">
+            <button type="button" onmousedown="return RTBold(this)" title="加粗"><b>B</b></button>
+            <button type="button" onmousedown="return RTItalic(this)" title="斜体"><i>I</i></button>
+            <button type="button" onmousedown="return RTUnderline(this)" title="下划线"><u>U</u></button>
+            <span class="tool-sep"></span>
+            <button type="button" class="color-btn" title="字体颜色">
+              <span class="color-btn-text" onmousedown="return RTColor(this)">A</span>
+              <span class="color-btn-bar" id="bar_<%= f.key %>"></span>
+              <input type="color" class="color-picker-input" id="color_<%= f.key %>" value="#333333" oninput="RTApplyColor(this)">
+            </button>
+            <span class="tool-sep"></span>
+            <button type="button" onmousedown="return RTList(this)" title="无序列表">•=</button>
+            <button type="button" onmousedown="return RTOrdered(this)" title="有序列表">1.</button>
+            <span class="tool-sep"></span>
+            <button type="button" onmousedown="return RTLink(this)" title="插入链接">链接</button>
+            <button type="button" onmousedown="return RTImage(this)" title="插入图片">图片</button>
+          </div>
+          <div class="richtext-content" contenteditable="true" data-placeholder="<%= f.placeholder %>" oninput="RTSync(this)"><%- activity ? activity[f.key] : '' %></div>
+        </div>
+        <input type="hidden" name="<%= f.key %>" value="">
+      </div>
+      <% }); %>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">保存</button>
+        <a href="/admin" class="btn btn-outline">取消</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // ============================================================
+    // 极度简化版富文本：内联 onmousedown 直接定位编辑框
+    // 原则：从按钮出发走 DOM 找到所属的 .richtext-content
+    // ============================================================
+
+    // 从按钮/元素找到所属的 richtext-content
+    function RTDiv(el) {
+      var p = el.parentElement;
+      while (p) {
+        if (p.classList.contains('richtext-editor')) {
+          return p.querySelector('.richtext-content');
+        }
+        p = p.parentElement;
+      }
+      return null;
+    }
+
+    // 找到所属的 hidden input
+    function RTHid(el) {
+      var p = el.parentElement;
+      while (p) {
+        if (p.classList.contains('richtext-editor')) {
+          return p.querySelector('input[type="hidden"]');
+        }
+        p = p.parentElement;
+      }
+      return null;
+    }
+
+    // 同步隐藏字段
+    function RTSync(div) {
+      var hid = RTHid(div);
+      if (hid) hid.value = div.innerHTML;
+    }
+
+    // 执行命令的核心：先存选区，focus后恢复，再execCommand
+    function RTExec(el, cmd, value) {
+      var div = RTDiv(el);
+      if (!div) return false;
+      // 在focus破坏选区前保存
+      var sel = window.getSelection();
+      var range = null;
+      if (sel.rangeCount > 0) { range = sel.getRangeAt(0).cloneRange(); }
+      // 聚焦编辑框
+      div.focus();
+      // 恢复选区
+      if (range) {
+        // 确保range在div内
+        try {
+          sel.removeAllRanges();
+          sel.addRange(range);
+        } catch(e) {}
+      }
+      try { document.execCommand(cmd, false, value || null); } catch(e) {}
+      RTSync(div);
+      return false;
+    }
+
+    // ====== 全局：图片上传弹窗 ======
+    function RTImage(el) {
+      var div = RTDiv(el);
+      if (!div) return false;
+      // 先保存选区，再focus
+      var sel = window.getSelection();
+      var range = sel.rangeCount > 0 ? sel.getRangeAt(0).cloneRange() : null;
+      div.focus();
+
+      var overlay = document.createElement('div');
+      overlay.className = 'img-dialog-overlay';
+      overlay.innerHTML =
+        '<div class="img-dialog"><h3>上传图片</h3>' +
+        '<div class="upload-area" id="uploadArea"><div class="upload-icon">📁</div><div class="upload-text">点击选择图片文件</div><div class="upload-hint">支持 jpg/png/gif/webp，最大10MB</div><input type="file" id="imgFileInput" accept="image/*" style="display:none;"></div>' +
+        '<div id="uploadStatus" style="text-align:center;padding:8px;display:none;"></div>' +
+        '<div class="img-dialog-btns"><button type="button" class="btn btn-outline btn-sm" onclick="this.closest(\'.img-dialog-overlay\').remove()">取消</button></div></div>';
+      document.body.appendChild(overlay);
+
+      var fi = overlay.querySelector('#imgFileInput');
+      var ua = overlay.querySelector('#uploadArea');
+      var sd = overlay.querySelector('#uploadStatus');
+
+      ua.onclick = function(){fi.click();};
+      ua.ondragover = function(e){e.preventDefault();};
+      ua.ondrop = function(e){e.preventDefault();if(e.dataTransfer.files.length>0)doUp(e.dataTransfer.files[0]);};
+      fi.onchange = function(){if(this.files.length>0)doUp(this.files[0]);};
+
+      function doUp(file) {
+        if(!file.type.match(/^image\//)){sd.style.display='block';sd.style.color='#f44336';sd.textContent='请选择图片文件';return;}
+        if(file.size>10*1024*1024){sd.style.display='block';sd.style.color='#f44336';sd.textContent='文件超过10MB';return;}
+        sd.style.display='block';sd.style.color='#666';sd.textContent='上传中...';
+        var fd=new FormData();fd.append('image',file);
+        fetch('/admin/upload-image',{method:'POST',body:fd}).then(function(r){return r.json();}).then(function(r){
+          if(r.success){
+            // 插入图片
+            div.focus();
+            if (range) { var s = window.getSelection(); s.removeAllRanges(); s.addRange(range); }
+            var img = document.createElement('img');
+            img.src = r.url; img.style.maxWidth = '100%';
+            var s = window.getSelection();
+            if (s.rangeCount > 0) { s.getRangeAt(0).insertNode(img); }
+            else { div.appendChild(img); }
+            div.appendChild(document.createElement('br'));
+            RTSync(div);
+            document.body.removeChild(overlay);
+          }else{sd.style.color='#f44336';sd.textContent='失败: '+(r.error||'?');}
+        }).catch(function(){sd.style.color='#f44336';sd.textContent='网络错误';});
+      }
+      return false;
+    }
+
+    // ====== 链接弹窗 ======
+    function RTLink(el) {
+      var div = RTDiv(el);
+      if (!div) return false;
+      // 先保存选区，再focus
+      var sel = window.getSelection();
+      var range = sel.rangeCount > 0 ? sel.getRangeAt(0).cloneRange() : null;
+      var txt = sel.toString();
+      div.focus();
+
+      var url = prompt('请输入链接URL：', 'https://');
+      if (!url || !url.trim()) return false;
+
+      div.focus();
+      if (range) { sel.removeAllRanges(); sel.addRange(range); }
+      var a = document.createElement('a');
+      a.href = url.trim(); a.target = '_blank'; a.textContent = txt || url.trim();
+      var s = window.getSelection();
+      if (s.rangeCount > 0) { var r = s.getRangeAt(0); if (!r.collapsed) r.deleteContents(); r.insertNode(a); }
+      else { div.appendChild(a); }
+      RTSync(div);
+      return false;
+    }
+
+    // ====== 颜色 ======
+    function RTColor(el) {
+      var div = RTDiv(el);
+      if (!div) return false;
+      div.focus();
+      // 找颜色 input 并弹出
+      var editor = el.parentElement;
+      while (editor && !editor.classList.contains('richtext-editor')) editor = editor.parentElement;
+      if (editor) {
+        var cp = editor.querySelector('.color-picker-input');
+        if (cp) setTimeout(function(){ try{cp.click();}catch(e){} }, 10);
+      }
+      return false;
+    }
+    function RTApplyColor(cp) {
+      var div = RTDiv(cp);
+      if (div) {
+        div.focus();
+        try { document.execCommand('foreColor', false, cp.value); } catch(e) {}
+        RTSync(div);
+        // 更新颜色条
+        var editor = cp.parentElement;
+        while (editor && !editor.classList.contains('richtext-editor')) editor = editor.parentElement;
+        if (editor) { var bar = editor.querySelector('.color-btn-bar'); if (bar) bar.style.background = cp.value; }
+      }
+    }
+
+    // ====== 普通格式命令 ======
+    function RTBold(el)      { return RTExec(el, 'bold'); }
+    function RTItalic(el)    { return RTExec(el, 'italic'); }
+    function RTUnderline(el) { return RTExec(el, 'underline'); }
+    function RTList(el)      { return RTExec(el, 'insertUnorderedList'); }
+    function RTOrdered(el)   { return RTExec(el, 'insertOrderedList'); }
+
+    // ====== 页面加载完同步所有隐藏字段 ======
+    document.querySelectorAll('.richtext-content').forEach(function(div) {
+      RTSync(div);
+    });
+
+    // 表单提交前最后同步
+    document.getElementById('editForm').addEventListener('submit', function() {
+      document.querySelectorAll('.richtext-content').forEach(function(div) {
+        RTSync(div);
+      });
+    });
+  </script>
+</body>
+</html>

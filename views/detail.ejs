@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= activity.name %> - 抖B社群活动公告栏</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <main>
+      <!-- 返回链接 -->
+      <a href="/" class="back-link">← 返回首页</a>
+
+      <!-- 活动标题 + 状态 -->
+      <div class="detail-section">
+        <div class="detail-title">
+          <%= activity.name %>
+          <%
+            let statusClass = '';
+            if (activity._status === '进行中') statusClass = 'active-tag';
+            else if (activity._status === '待开始') statusClass = 'upcoming-tag';
+            else if (activity._status === '可兑奖') statusClass = 'prize-tag';
+            else statusClass = 'ended-tag';
+          %>
+          <span class="status-tag <%= statusClass %>" style="margin-left: 8px; vertical-align: middle;"><%= activity._status %></span>
+        </div>
+      </div>
+
+      <%
+      // ===== 按PRD顺序展示字段 =====
+      %>
+
+      <!-- 1. 活动时间 -->
+      <% if (activity.activityStartDate) { %>
+      <%
+        function fmtDetailDate(str) {
+          if (!str) return '';
+          if (str.includes('T')) {
+            var p = str.split('T');
+            return p[0].replace(/-/g, '.') + ' ' + p[1];
+          }
+          return str.replace(/-/g, '.');
+        }
+      %>
+      <div class="detail-section">
+        <div class="detail-item">
+          <div class="detail-label">活动时间</div>
+          <div class="detail-content">
+            <%= fmtDetailDate(activity.activityStartDate) %> - <%= activity.activityEndDate ? fmtDetailDate(activity.activityEndDate) : '长期' %>
+          </div>
+        </div>
+      </div>
+      <% } %>
+
+      <!-- 2. 活动规则 -->
+      <% if (activity.rules) { %>
+      <div class="detail-section">
+        <div class="detail-item">
+          <div class="detail-label">活动规则</div>
+          <div class="detail-content"><%- activity.rules %></div>
+        </div>
+      </div>
+      <% } %>
+
+      <!-- 3. 活动入口 -->
+      <% if (activity.entry) { %>
+      <div class="detail-section">
+        <div class="detail-item">
+          <div class="detail-label">活动入口</div>
+          <div class="detail-content"><%- activity.entry %></div>
+        </div>
+      </div>
+      <% } %>
+
+      <!-- 4. 兑奖时间 -->
+      <% if (activity.prizeStartDate || activity.prizeEndDate) { %>
+      <div class="detail-section">
+        <div class="detail-item">
+          <div class="detail-label">兑奖时间</div>
+          <div class="detail-content">
+            <%= fmtDetailDate(activity.prizeStartDate) %> - <%= fmtDetailDate(activity.prizeEndDate) %>
+          </div>
+        </div>
+      </div>
+      <% } %>
+
+      <!-- 5. 兑奖方式 -->
+      <% if (activity.prizeMethod) { %>
+      <div class="detail-section">
+        <div class="detail-item">
+          <div class="detail-label">兑奖方式</div>
+          <div class="detail-content"><%- activity.prizeMethod %></div>
+        </div>
+      </div>
+      <% } %>
+
+      <!-- 6. 活动奖品 -->
+      <% if (activity.prizes) { %>
+      <div class="detail-section">
+        <div class="detail-item">
+          <div class="detail-label">活动奖品</div>
+          <div class="detail-content"><%- activity.prizes %></div>
+        </div>
+      </div>
+      <% } %>
+
+      <!-- 7. 备注 -->
+      <% if (activity.remark) { %>
+      <div class="detail-section">
+        <div class="detail-item">
+          <div class="detail-label">备注</div>
+          <div class="detail-content"><%- activity.remark %></div>
+        </div>
+      </div>
+      <% } %>
+
+    </main>
+
+    <%- include('partials/footer') %>
+  </div>
+</body>
+</html>

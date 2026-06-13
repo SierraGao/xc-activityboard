@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>后台登录 - 活动管理</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-box">
+      <h1>后台管理登录</h1>
+
+      <% if (error) { %>
+        <div class="login-error"><%= error %></div>
+      <% } %>
+
+      <form method="POST" action="/admin/login">
+        <input type="password" name="password" placeholder="请输入管理密码" required autofocus>
+        <button type="submit">登 录</button>
+      </form>
+
+      <div style="text-align:center; margin-top: 16px;">
+        <a href="/" style="color: var(--color-text-muted); font-size: 0.85rem; text-decoration: none;">← 返回首页</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

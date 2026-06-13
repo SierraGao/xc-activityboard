@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>抖B社群活动公告栏</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <%- include('partials/header') %>
+
+    <main>
+      <!-- 搜索框 -->
+      <input
+        type="text"
+        class="search-box"
+        placeholder="搜索活动名称..."
+        autocomplete="off"
+      >
+
+      <!-- 状态筛选 -->
+      <div class="filter-bar">
+        <button class="filter-tag active" data-status="active">进行中</button>
+        <button class="filter-tag" data-status="upcoming">待开始</button>
+        <button class="filter-tag" data-status="prize">可兑奖</button>
+        <button class="filter-tag" data-status="ended">已结束</button>
+        <button class="filter-tag" data-status="all">全部</button>
+      </div>
+
+      <!-- 活动列表 -->
+      <div class="activity-list">
+        <% activities.forEach(function(act) {
+          // 格式化日期时间显示: 包含时分
+          function fmtDateYMDH(str) {
+            if (!str) return '';
+            if (str.includes('T')) {
+              var p = str.split('T');
+              return p[0].replace(/-/g, '.') + ' ' + p[1];
+            }
+            return str.replace(/-/g, '.');
+          }
+
+          let timeText = '';
+          let statusClass = '';
+          if (act.isLongTerm) {
+            timeText = '长期活动';
+            statusClass = 'active-tag';
+          } else if (act._status === '待开始') {
+            timeText = fmtDateYMDH(act.activityStartDate) + ' 开始';
+            statusClass = 'upcoming-tag';
+          } else if (act._status === '可兑奖') {
+            timeText = fmtDateYMDH(act.prizeEndDate) + ' 截止';
+            statusClass = 'prize-tag';
+          } else if (act._status === '已结束') {
+            let endDate = act.prizeEndDate || act.activityEndDate || '';
+            timeText = fmtDateYMDH(endDate) + ' 截止';
+            statusClass = 'ended-tag';
+          } else {
+            // 进行中
+            timeText = fmtDateYMDH(act.activityEndDate) + ' 截止';
+            if (!act.activityEndDate) timeText = '长期活动';
+            statusClass = 'active-tag';
+          }
+
+          // 数据属性用于前端筛选
+          let dataStatus = '';
+          if (act._status === '进行中') dataStatus = 'active';
+          else if (act._status === '待开始') dataStatus = 'upcoming';
+          else if (act._status === '可兑奖') dataStatus = 'prize';
+          else dataStatus = 'ended';
+        %>
+        <a href="/detail/<%= act.id %>" class="activity-card" data-name="<%= act.name %>" data-status="<%= dataStatus %>">
+          <div class="card-info">
+            <div class="card-name"><%= act.name %></div>
+            <div class="card-time"><%= timeText %></div>
+          </div>
+          <span class="status-tag <%= statusClass %>"><%= act._status %></span>
+        </a>
+        <% }); %>
+
+        <% if (activities.length === 0) { %>
+        <div style="text-align:center; padding:40px 0; color:#999;">
+          <p>暂无活动</p>
+        </div>
+        <% } %>
+      </div>
+    </main>
+
+    <%- include('partials/footer') %>
+  </div>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>
