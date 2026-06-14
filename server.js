@@ -88,10 +88,32 @@ function loadActivities() {
   }
 }
 
-// 写入活动数据
+// 写入活动数据（自动备份）
 function saveActivities(data) {
   const filePath = path.join(__dirname, 'data', 'activities.json');
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
+  const backupDir = path.join(__dirname, 'data', 'backups');
+  const txtPath = path.join(__dirname, 'data', 'activities_backup.txt');
+
+  // 1. 写入主文件
+  const jsonStr = JSON.stringify(data, null, 2);
+  fs.writeFileSync(filePath, jsonStr, 'utf-8');
+
+  // 2. 同步纯文本备份（永远与 activities.json 一致）
+  fs.writeFileSync(txtPath, jsonStr, 'utf-8');
+
+  // 3. 带时间戳的备份（仅保留最近 20 个）
+  try {
+    if (!fs.existsSync(backupDir)) fs.mkdirSync(backupDir, { recursive: true });
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').substring(0, 19);
+    fs.writeFileSync(path.join(backupDir, `activities_${timestamp}.json`), jsonStr, 'utf-8');
+    // 清理超过 20 个的旧备份
+    const backups = fs.readdirSync(backupDir).filter(f => f.startsWith('activities_')).sort();
+    while (backups.length > 20) {
+      fs.unlinkSync(path.join(backupDir, backups.shift()));
+    }
+  } catch (e) {
+    // 备份失败不影响主流程
+  }
 }
 
 // 计算活动状态
@@ -338,6 +360,29 @@ app.post('/admin/edit/:id', requireAuth, (req, res) => {
   updated.updatedAt = new Date().toISOString();
 
   data.activities[index] = updated;
+  saveActivities(data);
+
+  res.redirect('/admin');
+});
+
+// 复制活动
+app.post('/admin/copy/:id', requireAuth, (req, res) => {
+  const data = loadActivities();
+  const original = data.activities.find(a => a.id === req.params.id);
+  if (!original) {
+    return res.status(404).send('活动不存在');
+  }
+
+  const now = new Date().toISOString();
+  const copy = {
+    ...original,
+    id: generateId(),
+    name: original.name + '（副本）',
+    createdAt: now,
+    updatedAt: now
+  };
+
+  data.activities.push(copy);
   saveActivities(data);
 
   res.redirect('/admin');

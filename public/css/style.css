@@ -626,6 +626,53 @@ body {
   margin: 4px 0;
 }
 
+/* ========== 图片缩放容器（Word风格） ========== */
+.img-resize-container {
+  display: inline-block;
+  position: relative;
+  max-width: 100%;
+  vertical-align: top;
+  margin: 4px 0;
+}
+.img-resize-container img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  cursor: pointer;
+}
+/* 四角 + 四边手柄 */
+.img-resize-container .rsz-handle {
+  position: absolute;
+  width: 12px; height: 12px;
+  background: #fff;
+  border: 2px solid #1976D2;
+  border-radius: 2px;
+  display: none;
+  z-index: 10;
+  box-shadow: 0 0 2px rgba(0,0,0,0.3);
+}
+.img-resize-container.selected .rsz-handle,
+.img-resize-container:hover .rsz-handle {
+  display: block;
+}
+/* 四角 */
+.rsz-handle.nw { top: -6px; left: -6px; cursor: nw-resize; }
+.rsz-handle.ne { top: -6px; right: -6px; cursor: ne-resize; }
+.rsz-handle.sw { bottom: -6px; left: -6px; cursor: sw-resize; }
+.rsz-handle.se { bottom: -6px; right: -6px; cursor: se-resize; }
+/* 四边中点 */
+.rsz-handle.n  { top: -6px; left: 50%; margin-left: -6px; cursor: n-resize; }
+.rsz-handle.s  { bottom: -6px; left: 50%; margin-left: -6px; cursor: s-resize; }
+.rsz-handle.e  { right: -6px; top: 50%; margin-top: -6px; cursor: e-resize; }
+.rsz-handle.w  { left: -6px; top: 50%; margin-top: -6px; cursor: w-resize; }
+/* 选中时边框 */
+.img-resize-container.selected {
+  outline: 2px solid #1976D2;
+  outline-offset: 1px;
+  border-radius: 2px;
+}
+
 /* 图片插入弹窗 */
 .img-dialog-overlay {
   position: fixed;
@@ -812,6 +859,54 @@ body {
   color: #C62828;
 }
 
+/* ========== 图片 Lightbox ========== */
+.lightbox-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.lightbox-overlay img {
+  max-width: 95vw;
+  max-height: 95vh;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  /* 不做缩放限制，显示原图分辨率 */
+}
+.lightbox-close {
+  position: fixed;
+  top: 16px;
+  right: 20px;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  font-size: 20px;
+  line-height: 36px;
+  text-align: center;
+  cursor: pointer;
+  z-index: 10001;
+  border: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.lightbox-close:hover { background: rgba(255,255,255,0.35); }
+.lightbox-hint {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255,255,255,0.6);
+  font-size: 0.8rem;
+  z-index: 10001;
+  pointer-events: none;
+}
+
 /* ========== 响应式 ========== */
 
 /* 小屏手机 */
@@ -838,6 +933,26 @@ body {
     flex-direction: row;
   }
   /* 桌面端保持单列，仅适当放宽容器 */
+}
+
+/* ========== 前台隐藏图片缩放手柄 ========== */
+.detail-content .rsz-handle,
+.detail-content .img-resize-container.selected,
+.detail-content .img-resize-container:hover .rsz-handle,
+.activity-card .rsz-handle,
+.activity-card .img-resize-container.selected {
+  display: none !important;
+}
+.detail-content .img-resize-container.selected {
+  outline: none !important;
+}
+/* 前台图片正常显示 */
+.detail-content .img-resize-container,
+.activity-card .img-resize-container {
+  display: inline-block;
+  max-width: 100%;
+  border: none !important;
+  outline: none !important;
 }
 
 /* 桌面宽屏 */

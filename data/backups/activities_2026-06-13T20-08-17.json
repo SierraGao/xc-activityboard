@@ -51,8 +51,8 @@
     {
       "id": "act_mqcsfhqi_vi8a",
       "name": "test",
-      "activityStartDate": "2026-06-04T04:08",
-      "activityEndDate": "2026-06-12T04:08",
+      "activityStartDate": "",
+      "activityEndDate": "",
       "prizeStartDate": "2026-06-13T04:07",
       "prizeEndDate": "2026-06-17T04:07",
       "rules": "<b>我就<i><u><font color=\"#9309ae\">测试测试测试</font></u></i></b><div><b><i><u><font color=\"#116adf\"><br></font></u></i></b></div>",
@@ -62,7 +62,7 @@
       "remark": "<span style=\"font-size: 15.2px;\">我就测试测试测试</span>",
       "isLongTerm": false,
       "createdAt": "2026-06-13T20:08:17.034Z",
-      "updatedAt": "2026-06-13T20:08:49.222Z"
+      "updatedAt": "2026-06-13T20:08:17.034Z"
     }
   ]
 }

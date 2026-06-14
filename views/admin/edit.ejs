@@ -100,7 +100,12 @@
       var p = el.parentElement;
       while (p) {
         if (p.classList.contains('richtext-editor')) {
-          return p.querySelector('input[type="hidden"]');
+          // hidden input 是 richtext-editor 的同级兄弟，在 form-group 内
+          var fg = p.parentElement;
+          if (fg && fg.classList.contains('form-group')) {
+            return fg.querySelector('input[type="hidden"]');
+          }
+          return null;
         }
         p = p.parentElement;
       }
@@ -170,14 +175,28 @@
         var fd=new FormData();fd.append('image',file);
         fetch('/admin/upload-image',{method:'POST',body:fd}).then(function(r){return r.json();}).then(function(r){
           if(r.success){
-            // 插入图片
+            // 插入图片（Word风格：带手柄的容器）
             div.focus();
             if (range) { var s = window.getSelection(); s.removeAllRanges(); s.addRange(range); }
             var img = document.createElement('img');
-            img.src = r.url; img.style.maxWidth = '100%';
+            img.src = r.url;
+            // 创建缩放容器
+            var wrap = document.createElement('span');
+            wrap.className = 'img-resize-container';
+            wrap.setAttribute('contenteditable', 'false');
+            wrap.innerHTML =
+              '<span class="rsz-handle nw"></span>' +
+              '<span class="rsz-handle ne"></span>' +
+              '<span class="rsz-handle sw"></span>' +
+              '<span class="rsz-handle se"></span>' +
+              '<span class="rsz-handle n"></span>' +
+              '<span class="rsz-handle s"></span>' +
+              '<span class="rsz-handle e"></span>' +
+              '<span class="rsz-handle w"></span>';
+            wrap.insertBefore(img, wrap.firstChild);
             var s = window.getSelection();
-            if (s.rangeCount > 0) { s.getRangeAt(0).insertNode(img); }
-            else { div.appendChild(img); }
+            if (s.rangeCount > 0) { s.getRangeAt(0).insertNode(wrap); }
+            else { div.appendChild(wrap); }
             div.appendChild(document.createElement('br'));
             RTSync(div);
             document.body.removeChild(overlay);
@@ -255,6 +274,96 @@
       document.querySelectorAll('.richtext-content').forEach(function(div) {
         RTSync(div);
       });
+    });
+
+    // ====== Word 风格图片拖拽缩放 ======
+    var resizeState = null; // { wrap, img, startW, startH, startX, startY, handle, aspect }
+
+    // 点击编辑区：选中/取消图片
+    document.addEventListener('click', function(e) {
+      var t = e.target;
+      // 点击图片 → 选中其容器
+      if (t.tagName === 'IMG' && t.parentElement && t.parentElement.classList.contains('img-resize-container')) {
+        e.preventDefault();
+        // 取消其他选中
+        document.querySelectorAll('.img-resize-container.selected').forEach(function(c) { c.classList.remove('selected'); });
+        t.parentElement.classList.add('selected');
+        return;
+      }
+      // 点击非图片区域 → 取消选中
+      if (!t.closest('.img-resize-container')) {
+        document.querySelectorAll('.img-resize-container.selected').forEach(function(c) { c.classList.remove('selected'); });
+      }
+    });
+
+    // 手柄 mousedown → 开始缩放
+    document.addEventListener('mousedown', function(e) {
+      var h = e.target;
+      if (!h.classList.contains('rsz-handle')) return;
+      e.preventDefault();
+      e.stopPropagation();
+      var wrap = h.parentElement;
+      var img = wrap.querySelector('img');
+      if (!img) return;
+      resizeState = {
+        wrap: wrap,
+        img: img,
+        startW: img.offsetWidth,
+        startH: img.offsetHeight,
+        startX: e.clientX,
+        startY: e.clientY,
+        handle: h,
+        aspect: img.offsetWidth / img.offsetHeight
+      };
+      wrap.classList.add('selected');
+    });
+
+    // mousemove → 缩放中
+    document.addEventListener('mousemove', function(e) {
+      if (!resizeState) return;
+      var st = resizeState;
+      var dx = e.clientX - st.startX;
+      var dy = e.clientY - st.startY;
+      var hClass = st.handle.className;
+      var newW = st.startW, newH = st.startH;
+
+      // 判断拖拽方向
+      var isCorner = hClass.indexOf('nw')>=0 || hClass.indexOf('ne')>=0 || hClass.indexOf('sw')>=0 || hClass.indexOf('se')>=0;
+      var hasN = hClass.indexOf('n')>=0, hasS = hClass.indexOf('s')>=0, hasE = hClass.indexOf('e')>=0, hasW = hClass.indexOf('w')>=0;
+
+      if (isCorner) {
+        // 角落：等比缩放
+        var scaleDir = 1;
+        if (hasN || hasW) scaleDir = -1; // 左上方向拖拽反转
+        // 使用对角线方向的主变化量
+        var d = 0;
+        if (hClass.indexOf('nw')>=0) d = -(dx + dy) / 2;
+        else if (hClass.indexOf('ne')>=0) d = (dx - dy) / 2;
+        else if (hClass.indexOf('sw')>=0) d = (-dx + dy) / 2;
+        else if (hClass.indexOf('se')>=0) d = (dx + dy) / 2;
+        newW = Math.max(20, st.startW + d);
+        newH = Math.round(newW / st.aspect);
+      } else {
+        // 边：单向缩放
+        if (hasE) newW = Math.max(20, st.startW + dx);
+        if (hasW) newW = Math.max(20, st.startW - dx);
+        if (hasS) newH = Math.max(20, st.startH + dy);
+        if (hasN) newH = Math.max(20, st.startH - dy);
+      }
+
+      st.img.style.width = newW + 'px';
+      if (!isCorner) st.img.style.height = newH + 'px';
+    });
+
+    // mouseup → 结束缩放
+    document.addEventListener('mouseup', function() {
+      if (resizeState) {
+        // 找到所属 richtext-content 并同步隐藏字段
+        var d = resizeState.img;
+        while (d && !d.classList.contains('richtext-content')) d = d.parentElement;
+        if (d) RTSync(d);
+        resizeState = null;
+      }
     });
   </script>
 </body>

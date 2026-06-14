@@ -210,6 +210,25 @@ ${bodyContent}
       <p>&copy; 2026 抖B社群活动公告栏</p>
     </footer>
   </div>
+
+  <div id="lightbox" class="lightbox-overlay" style="display:none;" onclick="if(event.target===this)this.style.display='none'">
+    <button class="lightbox-close" onclick="document.getElementById('lightbox').style.display='none'">&times;</button>
+    <img id="lightboxImg" src="" alt="查看原图">
+    <div class="lightbox-hint">长按或右键可保存图片</div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener('click', function(e) {
+        var t = e.target;
+        if (t.tagName === 'IMG') {
+          var p = t.parentElement, ok = false;
+          while (p) { if (p.classList && p.classList.contains('detail-content')) { ok = true; break; } p = p.parentElement; }
+          if (ok) { e.preventDefault(); document.getElementById('lightboxImg').src = t.src; document.getElementById('lightbox').style.display = 'flex'; }
+        }
+      });
+    });
+  </script>
   <script src="js/main.js"></script>
 </body>
 </html>`;

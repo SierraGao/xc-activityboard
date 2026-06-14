@@ -1,0 +1,20 @@
+{
+  "activities": [
+    {
+      "id": "act_mqcrs23z_frl2",
+      "name": "618限时大额券抽奖",
+      "activityStartDate": "2026-06-11T00:01",
+      "activityEndDate": "2026-06-17T17:59",
+      "prizeStartDate": "2026-06-17T18:00",
+      "prizeEndDate": "2026-06-18T23:49",
+      "rules": "点击<b>【参与抽奖】</b>扫码<font color=\"#f00000\"><b><i>加入指定扣扣群</i></b></font>，<div>进群后扫描群公告二维码即可参与抽奖。</div>",
+      "entry": "<div><span style=\"font-size: 15.2px;\"><font color=\"#d84646\" style=\"\"><a href=\"https://wxaurl.cn/6xQl5qXYYkl\" target=\"_blank\" style=\"\">https://wxaurl.cn/6xQl5qXYYkl</a><br></font></span></div><div><span style=\"font-size: 15.2px;\"><span class=\"img-resize-container\" contenteditable=\"false\"><img src=\"/uploads/mqcrrych_3n5i.jpg\" style=\"width: 183px;\"><span class=\"rsz-handle nw\"></span><span class=\"rsz-handle ne\"></span><span class=\"rsz-handle sw\"></span><span class=\"rsz-handle se\"></span><span class=\"rsz-handle n\"></span><span class=\"rsz-handle s\"></span><span class=\"rsz-handle e\"></span><span class=\"rsz-handle w\"></span></span><br></span></div><br>",
+      "prizeMethod": "<div>1.扫描下方二维码加入抖b私域小窝</div><div><span style=\"font-size: 0.95rem;\">2.添加群管理员“小熊”</span></div><div><span style=\"font-size: 0.95rem;\">3.告知活动、奖项，提供中奖截图，即可等待奖品发放（3个工作日内完成发放）~</span></div>",
+      "prizes": "<div>✅fufu</div><div>✅799-80优惠券</div><div>✅399-40优惠券</div>",
+      "remark": "<div>废话不多说，按需扫码上车~</div><div><span style=\"font-size: 0.95rem;\">参与活动的小伙伴千万别错过领奖机会！</span></div><div><span style=\"font-size: 0.95rem;\"><span class=\"img-resize-container\" contenteditable=\"false\"><img src=\"/uploads/mqcrzf6b_cdoe.jpg\" style=\"width: 253.5px;\"><span class=\"rsz-handle nw\"></span><span class=\"rsz-handle ne\"></span><span class=\"rsz-handle sw\"></span><span class=\"rsz-handle se\"></span><span class=\"rsz-handle n\"></span><span class=\"rsz-handle s\"></span><span class=\"rsz-handle e\"></span><span class=\"rsz-handle w\"></span></span><br></span></div><br>",
+      "isLongTerm": false,
+      "createdAt": "2026-06-13T19:50:03.695Z",
+      "updatedAt": "2026-06-13T19:55:52.801Z"
+    }
+  ]
+}

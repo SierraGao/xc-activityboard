@@ -78,6 +78,7 @@
             <td class="time-cell"><%= timeDisplay %></td>
             <td class="actions">
               <a href="/admin/edit/<%= act.id %>" class="btn btn-outline btn-sm">编辑</a>
+              <button class="btn btn-outline btn-sm" onclick="copyActivity('<%= act.id %>')" style="color:#1976D2;border-color:#1976D2;">复制</button>
               <button class="btn btn-danger btn-sm" onclick="deleteActivity('<%= act.id %>', '<%- act.name %>')">删除</button>
             </td>
           </tr>
@@ -126,6 +127,16 @@
         refreshAdminTable();
       });
     });
+
+    function copyActivity(id) {
+      if (confirm('确定要复制该活动吗？')) {
+        var form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/admin/copy/' + id;
+        document.body.appendChild(form);
+        form.submit();
+      }
+    }
 
     function deleteActivity(id, name) {
       if (confirm('确定要删除活动「' + name + '」吗？\n\n此操作不可恢复。')) {

@@ -31,38 +31,6 @@
       "isLongTerm": false,
       "createdAt": "2026-06-13T20:03:22.615Z",
       "updatedAt": "2026-06-13T20:03:22.615Z"
-    },
-    {
-      "id": "act_mqcsdd23_g3y3",
-      "name": "周五周末券（26.6.19）",
-      "activityStartDate": "2026-06-19T18:00",
-      "activityEndDate": "2026-06-19T18:01",
-      "prizeStartDate": "",
-      "prizeEndDate": "",
-      "rules": "<div>大佬们好～本周在微信群、qq群、抖音群分别发放周末券！<span style=\"font-size: 0.95rem;\">数量有限，先到先得！</span></div><div>微信群：199-20券</div><div>QQ 群：199-20券</div>",
-      "entry": "",
-      "prizeMethod": "",
-      "prizes": "",
-      "remark": "",
-      "isLongTerm": false,
-      "createdAt": "2026-06-13T20:06:37.659Z",
-      "updatedAt": "2026-06-13T20:06:37.659Z"
-    },
-    {
-      "id": "act_mqcsfhqi_vi8a",
-      "name": "test",
-      "activityStartDate": "2026-06-04T04:08",
-      "activityEndDate": "2026-06-12T04:08",
-      "prizeStartDate": "2026-06-13T04:07",
-      "prizeEndDate": "2026-06-17T04:07",
-      "rules": "<b>我就<i><u><font color=\"#9309ae\">测试测试测试</font></u></i></b><div><b><i><u><font color=\"#116adf\"><br></font></u></i></b></div>",
-      "entry": "<span style=\"font-size: 15.2px;\">我就测试测试测试</span>",
-      "prizeMethod": "<span style=\"font-size: 15.2px;\">我就测试测试测试</span>",
-      "prizes": "<span style=\"font-size: 15.2px;\">我就测试测试测试</span>",
-      "remark": "<span style=\"font-size: 15.2px;\">我就测试测试测试</span>",
-      "isLongTerm": false,
-      "createdAt": "2026-06-13T20:08:17.034Z",
-      "updatedAt": "2026-06-13T20:08:49.222Z"
     }
   ]
 }

@@ -119,5 +119,47 @@
 
     <%- include('partials/footer') %>
   </div>
+
+  <!-- 图片 Lightbox -->
+  <div id="lightbox" class="lightbox-overlay" style="display:none;" onclick="closeLightbox(event)">
+    <button class="lightbox-close" onclick="document.getElementById('lightbox').style.display='none'">&times;</button>
+    <img id="lightboxImg" src="" alt="查看原图">
+    <div class="lightbox-hint">长按或右键可保存图片</div>
+  </div>
+
+  <script>
+    // 详情页图片点击查看原图
+    document.addEventListener('DOMContentLoaded', function() {
+      var lightbox = document.getElementById('lightbox');
+      var lightboxImg = document.getElementById('lightboxImg');
+
+      // 委托：detail-content 内任意图片点击
+      document.addEventListener('click', function(e) {
+        var target = e.target;
+        // 如果点击的是 img-resize-container 内的图片，或普通 img
+        if (target.tagName === 'IMG') {
+          // 检查是否在 detail-content 内
+          var p = target.parentElement;
+          var inDetail = false;
+          while (p) {
+            if (p.classList && p.classList.contains('detail-content')) { inDetail = true; break; }
+            if (p.classList && p.classList.contains('richtext-content')) break; // 后台编辑区不触发
+            p = p.parentElement;
+          }
+          if (inDetail) {
+            e.preventDefault();
+            lightboxImg.src = target.src;
+            lightbox.style.display = 'flex';
+          }
+        }
+      });
+    });
+
+    function closeLightbox(e) {
+      if (e.target === e.currentTarget || e.target.classList.contains('lightbox-overlay')) {
+        document.getElementById('lightbox').style.display = 'none';
+      }
+    }
+  </script>
 </body>
 </html>
