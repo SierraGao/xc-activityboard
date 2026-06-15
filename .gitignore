@@ -19,8 +19,10 @@ desktop.ini
 *.tmp
 *.log
 
-# 上传的图片
+# 上传的图片（本地源，不上传）
 public/uploads/
 
-# 备份
+# 自动启动脚本
 autostart.vbs
+
+# 文档（docs/ 是 GitHub Pages 站点目录，需要上传；project-docs/ 才是开发文档）

@@ -269,8 +269,13 @@ function generate() {
       </div>
       <div class="activity-list">${cardsHtml}${emptyHtml}</div>
 `;
+  // 写入辅助函数：带 UTF-8 BOM，确保中文不乱码
+  function writeHtml(filePath, content) {
+    fs.writeFileSync(filePath, '﻿' + content, 'utf-8');
+  }
+
   const indexHtml = basePage('活动列表', indexBody);
-  fs.writeFileSync(path.join(DIST_DIR, 'index.html'), indexHtml, 'utf-8');
+  writeHtml(path.join(DIST_DIR, 'index.html'), indexHtml);
   console.log(`   ✅ 共 ${activities.length} 个活动卡片`);
 
   // 生成详情页
@@ -282,11 +287,38 @@ function generate() {
     const detailBody = renderDetailContent(act) + `
       <a href="/xc-activityboard/" class="back-link">← 返回首页</a>`;
     const detailHtml = basePage(act.name, detailBody);
-    fs.writeFileSync(path.join(detailDir, `${act.id}.html`), detailHtml, 'utf-8');
+    writeHtml(path.join(detailDir, `${act.id}.html`), detailHtml);
     detailCount++;
     console.log(`   📄 detail/${act.id}.html — ${act.name}`);
   });
   console.log(`   ✅ 共生成 ${detailCount} 个详情页`);
+
+  // 同步上传的图片到 docs/uploads/
+  console.log('');
+  const srcUploads = path.join(__dirname, '..', 'public', 'uploads');
+  const destUploads = path.join(DIST_DIR, 'uploads');
+  if (fs.existsSync(srcUploads)) {
+    if (fs.existsSync(destUploads)) fs.rmSync(destUploads, { recursive: true, force: true });
+    copyDir(srcUploads, destUploads);
+    const imgCount = fs.readdirSync(destUploads).filter(f => /\.(jpg|jpeg|png|gif|webp)$/i.test(f)).length;
+    console.log(`   🖼 同步 ${imgCount} 张图片到 docs/uploads/`);
+  }
+
+  // 替换所有 HTML 中的 /uploads/ → /xc-activityboard/uploads/
+  function fixImgPaths(dir) {
+    fs.readdirSync(dir, { withFileTypes: true }).forEach(function(entry) {
+      var fp = path.join(dir, entry.name);
+      if (entry.isDirectory()) { fixImgPaths(fp); }
+      else if (entry.name.endsWith('.html')) {
+        var html = fs.readFileSync(fp, 'utf-8');
+        // 去掉可能重复的 BOM
+        while (html.charCodeAt(0) === 0xFEFF) html = html.slice(1);
+        html = html.replace(/src="\/uploads\//g, 'src="/xc-activityboard/uploads/');
+        fs.writeFileSync(fp, '﻿' + html, 'utf-8');
+      }
+    });
+  }
+  if (fs.existsSync(destUploads)) fixImgPaths(DIST_DIR);
 
   console.log('\n✨ 静态站点生成完成！');
   console.log(`   输出目录: ${DIST_DIR}`);
