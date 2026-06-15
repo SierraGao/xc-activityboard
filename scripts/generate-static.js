@@ -305,15 +305,22 @@ function generate() {
   }
 
   // 替换所有 HTML 中的 /uploads/ → /xc-activityboard/uploads/
+  // 同时剥除 img-resize-container 包装（前台不需要手柄）
   function fixImgPaths(dir) {
     fs.readdirSync(dir, { withFileTypes: true }).forEach(function(entry) {
       var fp = path.join(dir, entry.name);
       if (entry.isDirectory()) { fixImgPaths(fp); }
       else if (entry.name.endsWith('.html')) {
         var html = fs.readFileSync(fp, 'utf-8');
-        // 去掉可能重复的 BOM
         while (html.charCodeAt(0) === 0xFEFF) html = html.slice(1);
         html = html.replace(/src="\/uploads\//g, 'src="/xc-activityboard/uploads/');
+        // 删除所有手柄 span
+        html = html.replace(/<span class="rsz-handle[^>]*><\/span>/g, '');
+        // 删除 img-resize-container 开标签
+        html = html.replace(/<span class="img-resize-container"[^>]*>/g, '');
+        // 删除对应的闭标签（img 后面紧跟着的那个 </span>）
+        // 匹配: <img ...></span> → <img ...>
+        html = html.replace(/(<img[^>]*>)\s*<\/span>/g, '$1');
         fs.writeFileSync(fp, '﻿' + html, 'utf-8');
       }
     });
