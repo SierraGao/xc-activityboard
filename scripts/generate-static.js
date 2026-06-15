@@ -8,7 +8,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const DIST_DIR = path.join(__dirname, '..', 'dist');
+const DIST_DIR = path.join(__dirname, '..', 'docs');
 const DATA_FILE = path.join(__dirname, '..', 'data', 'activities.json');
 
 // ==================== 状态计算 ====================

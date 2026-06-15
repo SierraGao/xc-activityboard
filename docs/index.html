@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>活动列表 - 抖B社群活动公告栏</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <header class="site-header">
+      <h1 class="site-title">抖B社群活动公告栏</h1>
+    </header>
+
+    <main>
+
+      <input type="text" class="search-box" placeholder="搜索活动名称..." autocomplete="off">
+      <div class="filter-bar">
+        <button class="filter-tag active" data-status="active">进行中</button>
+        <button class="filter-tag" data-status="upcoming">待开始</button>
+        <button class="filter-tag" data-status="prize">可兑奖</button>
+        <button class="filter-tag" data-status="ended">已结束</button>
+        <button class="filter-tag" data-status="all">全部</button>
+      </div>
+      <div class="activity-list">
+        <a href="detail/act_mqcrs23z_frl2.html" class="activity-card" data-name="618限时大额券抽奖" data-status="active">
+          <div class="card-info">
+            <div class="card-name">618限时大额券抽奖</div>
+            <div class="card-time">2026.06.17 17:59 截止</div>
+          </div>
+          <span class="status-tag active-tag">进行中</span>
+        </a>
+
+        <a href="detail/act_mqcs96k7_7kw0.html" class="activity-card" data-name="🗓【抖bの你打卡了吗（第九期）】5月签到活动" data-status="ended">
+          <div class="card-info">
+            <div class="card-name">🗓【抖bの你打卡了吗（第九期）】5月签到活动</div>
+            <div class="card-time">2026.06.13 07:01 截止</div>
+          </div>
+          <span class="status-tag ended-tag">已结束</span>
+        </a>
+
+        <a href="detail/act_mqcsdd23_g3y3.html" class="activity-card" data-name="周五周末券（26.6.19）" data-status="upcoming">
+          <div class="card-info">
+            <div class="card-name">周五周末券（26.6.19）</div>
+            <div class="card-time">2026.06.19 18:00 开始</div>
+          </div>
+          <span class="status-tag upcoming-tag">待开始</span>
+        </a>
+
+        <a href="detail/act_mqcsfhqi_vi8a.html" class="activity-card" data-name="test" data-status="prize">
+          <div class="card-info">
+            <div class="card-name">test</div>
+            <div class="card-time">2026.06.17 04:07 截止</div>
+          </div>
+          <span class="status-tag prize-tag">可兑奖</span>
+        </a></div>
+
+    </main>
+
+    <footer class="site-footer">
+      <p>&copy; 2026 抖B社群活动公告栏</p>
+    </footer>
+  </div>
+
+  <div id="lightbox" class="lightbox-overlay" style="display:none;" onclick="if(event.target===this)this.style.display='none'">
+    <button class="lightbox-close" onclick="document.getElementById('lightbox').style.display='none'">&times;</button>
+    <img id="lightboxImg" src="" alt="查看原图">
+    <div class="lightbox-hint">长按或右键可保存图片</div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener('click', function(e) {
+        var t = e.target;
+        if (t.tagName === 'IMG') {
+          var p = t.parentElement, ok = false;
+          while (p) { if (p.classList && p.classList.contains('detail-content')) { ok = true; break; } p = p.parentElement; }
+          if (ok) { e.preventDefault(); document.getElementById('lightboxImg').src = t.src; document.getElementById('lightbox').style.display = 'flex'; }
+        }
+      });
+    });
+  </script>
+  <script src="js/main.js"></script>
+</body>
+</html>
