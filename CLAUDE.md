@@ -21,14 +21,14 @@
 
 ## 标准文档路径
 
-所有项目标准文档位于 `docs/` 目录：
+所有项目标准文档位于 `project-docs/` 目录（`docs/` 已被 GitHub Pages 静态站占用）：
 
 | 文档 | 路径 | 说明 |
 |------|------|------|
-| 开发需求文档 | [docs/requirements.md](docs/requirements.md) | PRD提炼的功能需求 |
-| 技术规范 | [docs/technical-spec.md](docs/technical-spec.md) | 架构设计、接口定义、数据结构 |
-| 设计规范 | [docs/design-spec.md](docs/design-spec.md) | 色彩、组件、布局、视觉标准 |
-| 分步执行步骤 | [docs/implementation-steps.md](docs/implementation-steps.md) | 7步开发计划及里程碑 |
+| 开发需求文档 | [project-docs/requirements.md](project-docs/requirements.md) | PRD提炼的功能需求 |
+| 技术规范 | [project-docs/technical-spec.md](project-docs/technical-spec.md) | 架构设计、接口定义、数据结构 |
+| 设计规范 | [project-docs/design-spec.md](project-docs/design-spec.md) | 色彩、组件、布局、视觉标准 |
+| 分步执行步骤 | [project-docs/implementation-steps.md](project-docs/implementation-steps.md) | 7步开发计划及里程碑 |
 
 ## 开发日志
 

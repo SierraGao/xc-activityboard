@@ -243,11 +243,11 @@ function generate() {
   const data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
   const activities = data.activities;
 
-  // 清空并重建 dist 目录
-  if (fs.existsSync(DIST_DIR)) {
-    fs.rmSync(DIST_DIR, { recursive: true, force: true });
-  }
+  // 清理旧的生成文件（只删子目录，不动 docs 根目录）
   fs.mkdirSync(DIST_DIR, { recursive: true });
+  [path.join(DIST_DIR, 'css'), path.join(DIST_DIR, 'js'), path.join(DIST_DIR, 'detail')].forEach(function(d) {
+    if (fs.existsSync(d)) fs.rmSync(d, { recursive: true, force: true });
+  });
 
   // 复制静态资源
   const publicDir = path.join(__dirname, '..', 'public');
