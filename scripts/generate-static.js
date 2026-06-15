@@ -79,7 +79,7 @@ function renderCard(act) {
   }
 
   return `
-        <a href="detail/${act.id}.html" class="activity-card" data-name="${escHtml(act.name)}" data-status="${dataStatus}">
+        <a href="/xc-activityboard/detail/${act.id}.html" class="activity-card" data-name="${escHtml(act.name)}" data-status="${dataStatus}">
           <div class="card-info">
             <div class="card-name">${escHtml(act.name)}</div>
             <div class="card-time">${escHtml(timeText)}</div>
@@ -194,7 +194,7 @@ function basePage(title, bodyContent) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escHtml(title)} - 抖B社群活动公告栏</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="/xc-activityboard/css/style.css">
 </head>
 <body>
   <div class="container">
@@ -229,7 +229,7 @@ ${bodyContent}
       });
     });
   </script>
-  <script src="js/main.js"></script>
+  <script src="/xc-activityboard/js/main.js"></script>
 </body>
 </html>`;
 }
@@ -280,7 +280,7 @@ function generate() {
   let detailCount = 0;
   activities.forEach(act => {
     const detailBody = renderDetailContent(act) + `
-      <a href="../" class="back-link">← 返回首页</a>`;
+      <a href="/xc-activityboard/" class="back-link">← 返回首页</a>`;
     const detailHtml = basePage(act.name, detailBody);
     fs.writeFileSync(path.join(detailDir, `${act.id}.html`), detailHtml, 'utf-8');
     detailCount++;
