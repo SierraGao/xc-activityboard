@@ -244,10 +244,12 @@ body {
 }
 
 .detail-content img {
+  display: block;
   max-width: 100%;
   height: auto;
   border-radius: 4px;
-  margin: 4px 0;
+  margin: 8px 0;
+  word-break: normal;
 }
 
 .back-link {
