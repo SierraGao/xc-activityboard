@@ -229,7 +229,7 @@ app.get('/admin', requireAuth, (req, res) => {
     ...a,
     _status: calcStatus(a)
   }));
-  res.render('admin/list', { activities });
+  res.render('admin/list', { activities, synced: req.query.synced === '1' });
 });
 
 // 生成唯一ID
@@ -388,6 +388,8 @@ app.post('/admin/copy/:id', requireAuth, (req, res) => {
   res.redirect('/admin');
 });
 
+const execSync = require('child_process').execSync;
+
 // 删除活动
 app.post('/admin/delete/:id', requireAuth, (req, res) => {
   const data = loadActivities();
@@ -400,6 +402,23 @@ app.post('/admin/delete/:id', requireAuth, (req, res) => {
   saveActivities(data);
 
   res.redirect('/admin');
+});
+
+// 一键同步到公网
+app.post('/admin/sync', requireAuth, (req, res) => {
+  try {
+    const projectDir = __dirname;
+    // 1. 重新生成静态站点
+    execSync('node scripts/generate-static.js', { cwd: projectDir, timeout: 30000 });
+    // 2. git add + commit + push
+    execSync('git add -A', { cwd: projectDir, timeout: 10000 });
+    execSync('git commit -m "同步更新"', { cwd: projectDir, timeout: 10000 });
+    execSync('git push', { cwd: projectDir, timeout: 30000 });
+    res.redirect('/admin?synced=1');
+  } catch (err) {
+    console.error('同步失败:', err.message);
+    res.send('<h3>同步失败</h3><p>' + err.message + '</p><a href="/admin">返回</a>');
+  }
 });
 
 // ==================== 启动服务器 ====================

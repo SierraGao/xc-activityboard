@@ -7,11 +7,15 @@
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+  <% if (locals.synced) { %>
+  <div style="background:#E8F5E9;color:#2E7D32;text-align:center;padding:10px;font-size:0.9rem;">✅ 已同步到公网！稍等1-2分钟后生效</div>
+  <% } %>
   <div class="container">
     <div class="admin-header">
       <h1>活动管理</h1>
       <div style="display:flex; gap:8px;">
         <a href="/admin/new" class="btn btn-primary">+ 新增活动</a>
+        <button class="btn btn-outline btn-sm" onclick="syncToGithub()" style="color:#2E7D32;border-color:#2E7D32;">⟳ 同步到公网</button>
         <a href="/admin/change-password" class="btn btn-outline btn-sm">改密</a>
         <a href="/admin/logout" class="btn btn-outline btn-sm">退出</a>
       </div>
@@ -99,6 +103,18 @@
   </div>
 
   <script>
+    function syncToGithub() {
+      if (!confirm('确定要同步活动数据到公网吗？\n\n公网地址: https://sierragao.github.io/xc-activityboard/')) return;
+      var btn = event.target;
+      btn.textContent = '⟳ 同步中...';
+      btn.disabled = true;
+      var form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '/admin/sync';
+      document.body.appendChild(form);
+      form.submit();
+    }
+
     // 后台搜索 + 筛选
     let adminKeyword = '';
     let adminFilter = 'all';
