@@ -14,8 +14,8 @@ const PORT = process.env.PORT || 3000;
 // ==================== 中间件 ====================
 
 // 解析请求体
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '10mb' }));
 
 // Session 配置（用于后台登录）
 app.use(session({

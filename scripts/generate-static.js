@@ -79,7 +79,7 @@ function renderCard(act) {
   }
 
   return `
-        <a href="/xc-activityboard/detail/${act.id}.html" class="activity-card" data-name="${escHtml(act.name)}" data-status="${dataStatus}">
+        <a href="/xc-activityboard/detail/${act.id}.html" class="activity-card" data-name="${escHtml(act.name)}" data-status="${dataStatus}" data-start="${act.activityStartDate || ''}" data-end="${act.activityEndDate || ''}" data-prize-start="${act.prizeStartDate || ''}" data-prize-end="${act.prizeEndDate || ''}" data-longterm="${act.isLongTerm ? '1' : '0'}">
           <div class="card-info">
             <div class="card-name">${escHtml(act.name)}</div>
             <div class="card-time">${escHtml(timeText)}</div>
@@ -98,10 +98,10 @@ function renderDetailContent(act) {
 
   let html = '';
 
-  // 1. 标题 + 状态
+  // 1. 标题 + 状态（数据属性供前端JS实时计算状态）
   html += `
       <div class="detail-section">
-        <div class="detail-title">${escHtml(act.name)} <span class="status-tag ${statusClass}" style="margin-left:8px;vertical-align:middle;">${statusName}</span></div>
+        <div class="detail-title">${escHtml(act.name)} <span class="status-tag ${statusClass}" data-start="${act.activityStartDate || ''}" data-end="${act.activityEndDate || ''}" data-prize-start="${act.prizeStartDate || ''}" data-prize-end="${act.prizeEndDate || ''}" data-longterm="${act.isLongTerm ? '1' : '0'}" style="margin-left:8px;vertical-align:middle;">${statusName}</span></div>
       </div>`;
 
   // 2. 活动时间
