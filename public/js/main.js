@@ -4,6 +4,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   initCalcStatus();
+  sortCards();
   initSearch();
   initFilters();
   applyInitialFilter();
@@ -46,7 +47,6 @@ function formatTime(act) {
     var d = act.prizeEndDate || act.activityEndDate || '';
     return d.replace(/T/, ' ').replace(/-/g, '.') + ' 截止';
   }
-  // 进行中
   if (act.activityEndDate) return act.activityEndDate.replace(/T/, ' ').replace(/-/g, '.') + ' 截止';
   return '长期活动';
 }
@@ -66,13 +66,11 @@ function initCalcStatus() {
     act._status = calcStatus(act.activityStartDate, act.activityEndDate, act.prizeStartDate, act.prizeEndDate, act.isLongTerm);
     card.dataset.status = statusMap[act._status][1];
 
-    // 更新状态标签
     var tag = card.querySelector('.status-tag');
     if (tag) {
       tag.textContent = act._status;
       tag.className = 'status-tag ' + statusMap[act._status][0];
     }
-    // 更新时间文字
     var timeEl = card.querySelector('.card-time');
     if (timeEl) timeEl.textContent = formatTime(act);
   });
@@ -91,6 +89,38 @@ function initCalcStatus() {
     detailTag.textContent = act2._status;
     detailTag.className = 'status-tag ' + statusMap[act2._status][0];
   }
+}
+
+// ==================== 前端活动排序 ====================
+
+function sortCards() {
+  var STATUS_ORDER = { 'upcoming': 0, 'active': 1, 'prize': 2, 'ended': 3 };
+  var list = document.querySelector('.activity-list');
+  if (!list) return;
+  var cards = Array.from(list.querySelectorAll('.activity-card'));
+
+  cards.sort(function(a, b) {
+    var as = a.dataset.status, bs = b.dataset.status;
+    var aPrio = STATUS_ORDER[as] != null ? STATUS_ORDER[as] : 4;
+    var bPrio = STATUS_ORDER[bs] != null ? STATUS_ORDER[bs] : 4;
+    if (aPrio !== bPrio) return aPrio - bPrio;
+
+    // 同级排序
+    if (as === 'upcoming') return (a.dataset.start || '9999').localeCompare(b.dataset.start || '9999');
+    if (as === 'active') {
+      var aLong = (a.dataset.longterm === '1' || !a.dataset.end) ? 1 : 0;
+      var bLong = (b.dataset.longterm === '1' || !b.dataset.end) ? 1 : 0;
+      if (aLong !== bLong) return aLong - bLong;
+      return (a.dataset.end || '9999').localeCompare(b.dataset.end || '9999');
+    }
+    if (as === 'prize') return (a.dataset.prizeEnd || '9999').localeCompare(b.dataset.prizeEnd || '9999');
+    // ended: 降序
+    var aEnd = a.dataset.prizeEnd || a.dataset.end || '';
+    var bEnd = b.dataset.prizeEnd || b.dataset.end || '';
+    return bEnd.localeCompare(aEnd);
+  });
+
+  cards.forEach(function(card) { list.appendChild(card); });
 }
 
 // 当前搜索关键词和筛选状态

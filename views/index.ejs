@@ -70,7 +70,7 @@
           else if (act._status === '可兑奖') dataStatus = 'prize';
           else dataStatus = 'ended';
         %>
-        <a href="/detail/<%= act.id %>" class="activity-card" data-name="<%= act.name %>" data-status="<%= dataStatus %>">
+        <a href="/detail/<%= act.id %>" class="activity-card" data-name="<%= act.name %>" data-status="<%= dataStatus %>" data-start="<%= act.activityStartDate || '' %>" data-end="<%= act.activityEndDate || '' %>" data-prize-start="<%= act.prizeStartDate || '' %>" data-prize-end="<%= act.prizeEndDate || '' %>" data-longterm="<%= act.isLongTerm ? '1' : '0' %>">
           <div class="card-info">
             <div class="card-name"><%= act.name %></div>
             <div class="card-time"><%= timeText %></div>

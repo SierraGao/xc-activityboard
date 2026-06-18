@@ -243,6 +243,26 @@ function generate() {
   const data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
   const activities = data.activities;
 
+  // 排序（与 server.js 和 main.js 一致）
+  activities.forEach(a => { a._status = calcStatus(a); });
+  const STATUS_ORDER_SORT = { '待开始': 0, '进行中': 1, '可兑奖': 2, '已结束': 3 };
+  activities.sort((a, b) => {
+    const ap = STATUS_ORDER_SORT[a._status] ?? 4;
+    const bp = STATUS_ORDER_SORT[b._status] ?? 4;
+    if (ap !== bp) return ap - bp;
+    if (a._status === '待开始') return (a.activityStartDate || '9999').localeCompare(b.activityStartDate || '9999');
+    if (a._status === '进行中') {
+      const al = (a.isLongTerm || !a.activityEndDate) ? 1 : 0;
+      const bl = (b.isLongTerm || !b.activityEndDate) ? 1 : 0;
+      if (al !== bl) return al - bl;
+      return (a.activityEndDate || '9999').localeCompare(b.activityEndDate || '9999');
+    }
+    if (a._status === '可兑奖') return (a.prizeEndDate || '9999').localeCompare(b.prizeEndDate || '9999');
+    const ae = a.prizeEndDate || a.activityEndDate || '';
+    const be = b.prizeEndDate || b.activityEndDate || '';
+    return be.localeCompare(ae);
+  });
+
   // 清理旧的生成文件（只删子目录，不动 docs 根目录）
   fs.mkdirSync(DIST_DIR, { recursive: true });
   [path.join(DIST_DIR, 'css'), path.join(DIST_DIR, 'js'), path.join(DIST_DIR, 'detail')].forEach(function(d) {

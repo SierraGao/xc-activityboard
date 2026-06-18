@@ -166,6 +166,41 @@ function calcStatus(activity) {
   return '进行中';
 }
 
+// 活动排序——按状态+时间规则自动排序
+function sortActivities(activities) {
+  const STATUS_ORDER = { '待开始': 0, '进行中': 1, '可兑奖': 2, '已结束': 3 };
+
+  activities.sort((a, b) => {
+    const aStatus = a._status || calcStatus(a);
+    const bStatus = b._status || calcStatus(b);
+    const aPrio = STATUS_ORDER[aStatus] ?? 4;
+    const bPrio = STATUS_ORDER[bStatus] ?? 4;
+
+    // 第一优先级：状态
+    if (aPrio !== bPrio) return aPrio - bPrio;
+
+    // 同状态内部排序
+    if (aStatus === '待开始') {
+      return (a.activityStartDate || '9999').localeCompare(b.activityStartDate || '9999');
+    }
+    if (aStatus === '进行中') {
+      const aLong = (a.isLongTerm || !a.activityEndDate) ? 1 : 0;
+      const bLong = (b.isLongTerm || !b.activityEndDate) ? 1 : 0;
+      if (aLong !== bLong) return aLong - bLong;
+      return (a.activityEndDate || '9999').localeCompare(b.activityEndDate || '9999');
+    }
+    if (aStatus === '可兑奖') {
+      return (a.prizeEndDate || '9999').localeCompare(b.prizeEndDate || '9999');
+    }
+    // 已结束：截止晚的排上面（降序）
+    const aEnd = a.prizeEndDate || a.activityEndDate || '';
+    const bEnd = b.prizeEndDate || b.activityEndDate || '';
+    return bEnd.localeCompare(aEnd);
+  });
+
+  return activities;
+}
+
 // ==================== 前台路由 ====================
 
 // 首页 - 活动列表
@@ -175,6 +210,7 @@ app.get('/', (req, res) => {
     ...a,
     _status: calcStatus(a)
   }));
+  sortActivities(activities);
   res.render('index', { activities });
 });
 
@@ -229,6 +265,7 @@ app.get('/admin', requireAuth, (req, res) => {
     ...a,
     _status: calcStatus(a)
   }));
+  sortActivities(activities);
   res.render('admin/list', { activities, synced: req.query.synced === '1' });
 });
 

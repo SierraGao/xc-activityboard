@@ -23,7 +23,7 @@
             else if (activity._status === '可兑奖') statusClass = 'prize-tag';
             else statusClass = 'ended-tag';
           %>
-          <span class="status-tag <%= statusClass %>" style="margin-left: 8px; vertical-align: middle;"><%= activity._status %></span>
+          <span class="status-tag <%= statusClass %>" data-start="<%= activity.activityStartDate || '' %>" data-end="<%= activity.activityEndDate || '' %>" data-prize-start="<%= activity.prizeStartDate || '' %>" data-prize-end="<%= activity.prizeEndDate || '' %>" data-longterm="<%= activity.isLongTerm ? '1' : '0' %>" style="margin-left: 8px; vertical-align: middle;"><%= activity._status %></span>
         </div>
       </div>
 
