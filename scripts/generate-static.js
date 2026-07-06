@@ -30,7 +30,7 @@ function calcStatus(activity) {
   const prizeEnd = parseDate(activity.prizeEndDate);
 
   if (startDate && now < startDate) return '待开始';
-  if (prizeStart && prizeEnd && now >= prizeStart && now <= prizeEnd) return '可兑奖';
+  if (prizeStart && prizeEnd && now >= prizeStart && now <= prizeEnd && endDate && now > endDate) return '可兑奖';
   const lastEndDate = prizeEnd || endDate;
   if (lastEndDate && now > lastEndDate) return '已结束';
   if (startDate && endDate && now >= startDate && now <= endDate) return '进行中';

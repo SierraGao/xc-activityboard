@@ -31,7 +31,7 @@ function calcStatus(startStr, endStr, prizeStartStr, prizeEndStr, isLongTerm) {
   var prizeEnd = parseDate(prizeEndStr);
 
   if (startDate && now < startDate) return '待开始';
-  if (prizeStart && prizeEnd && now >= prizeStart && now <= prizeEnd) return '可兑奖';
+  if (prizeStart && prizeEnd && now >= prizeStart && now <= prizeEnd && endDate && now > endDate) return '可兑奖';
   var lastEndDate = prizeEnd || endDate;
   if (lastEndDate && now > lastEndDate) return '已结束';
   if (startDate && endDate && now >= startDate && now <= endDate) return '进行中';

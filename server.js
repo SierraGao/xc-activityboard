@@ -146,8 +146,8 @@ function calcStatus(activity) {
     return '待开始';
   }
 
-  // 可兑奖：兑奖开始时间 ≤ 当前时间 ≤ 兑奖结束时间
-  if (prizeStart && prizeEnd && now >= prizeStart && now <= prizeEnd) {
+  // 可兑奖：活动时间已结束 且 兑奖开始时间 ≤ 当前时间 ≤ 兑奖结束时间
+  if (prizeStart && prizeEnd && now >= prizeStart && now <= prizeEnd && endDate && now > endDate) {
     return '可兑奖';
   }
 
