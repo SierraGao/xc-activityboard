@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7月社群日 · 专享神券发放 - 抖B社群活动公告栏</title>
+  <link rel="stylesheet" href="/xc-activityboard/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <header class="site-header">
+      <h1 class="site-title">抖B社群活动公告栏</h1>
+    </header>
+
+    <main>
+
+      <div class="detail-section">
+        <div class="detail-title">7月社群日 · 专享神券发放 <span class="status-tag upcoming-tag" data-start="2026-07-07T18:00" data-end="2026-07-07T18:10" data-prize-start="" data-prize-end="" data-longterm="0" style="margin-left:8px;vertical-align:middle;">待开始</span></div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-item">
+          <div class="detail-label">活动时间</div>
+          <div class="detail-content">2026.07.07 18:00 - 2026.07.07 18:10</div>
+        </div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-item">
+          <div class="detail-label">活动规则</div>
+          <div class="detail-content"><div><br></div><div><br></div><div><br></div></div>
+        </div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-item">
+          <div class="detail-label">活动入口</div>
+          <div class="detail-content">抖b任意绿泡泡群聊</div>
+        </div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-item">
+          <div class="detail-label">活动奖品</div>
+          <div class="detail-content"><div><b>🧧 硬周神券清单：</b></div><div>社群日专享满299-30</div><div>社群日专享满499-50</div><div>社群日专享满699-70</div><div><b><br></b></div><div><div><span style="font-size: 15.2px;"><b>🧧 软周神券清单：</b></span></div><div><span style="font-size: 15.2px;">社群日专享满99-10</span></div><div><span style="font-size: 15.2px;">社群日专享满188-20</span></div><div><span style="font-size: 15.2px;">社群日专享满299-30</span></div></div></div>
+        </div>
+      </div>
+      <a href="/xc-activityboard/" class="back-link">← 返回首页</a>
+    </main>
+
+    <footer class="site-footer">
+      <p>&copy; 2026 抖B社群活动公告栏</p>
+    </footer>
+  </div>
+
+  <div id="lightbox" class="lightbox-overlay" style="display:none;" onclick="if(event.target===this)this.style.display='none'">
+    <button class="lightbox-close" onclick="document.getElementById('lightbox').style.display='none'">&times;</button>
+    <img id="lightboxImg" src="" alt="查看原图">
+    <div class="lightbox-hint">长按或右键可保存图片</div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener('click', function(e) {
+        var t = e.target;
+        if (t.tagName === 'IMG') {
+          var p = t.parentElement, ok = false;
+          while (p) { if (p.classList && p.classList.contains('detail-content')) { ok = true; break; } p = p.parentElement; }
+          if (ok) { e.preventDefault(); document.getElementById('lightboxImg').src = t.src; document.getElementById('lightbox').style.display = 'flex'; }
+        }
+      });
+    });
+  </script>
+  <script src="/xc-activityboard/js/main.js"></script>
+</body>
+</html>
