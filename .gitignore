@@ -1,9 +1,10 @@
+# ⚠️ 敏感文件（绝对不能上传到 GitHub）
+.env
+
 # 依赖
 node_modules/
 
-# ⚠️ 敏感文件（绝对不能上传到 GitHub）
-.env
-data/
+# 开发日志（不需要上传）
 dev-logs/
 
 # 系统文件
@@ -19,10 +20,9 @@ desktop.ini
 *.tmp
 *.log
 
-# 上传的图片（本地源，不上传）
-public/uploads/
-
 # 自动启动脚本
 autostart.vbs
 
-# 文档（docs/ 是 GitHub Pages 站点目录，需要上传；project-docs/ 才是开发文档）
+# 备份目录（云端不需要冗余备份）
+data/backups/
+data/activities_backup.txt
