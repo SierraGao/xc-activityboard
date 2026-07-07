@@ -426,6 +426,7 @@ app.post('/admin/copy/:id', requireAuth, (req, res) => {
 });
 
 const execSync = require('child_process').execSync;
+const exec = require('child_process').exec;
 
 // 删除活动
 app.post('/admin/delete/:id', requireAuth, (req, res) => {
@@ -441,21 +442,19 @@ app.post('/admin/delete/:id', requireAuth, (req, res) => {
   res.redirect('/admin');
 });
 
-// 一键同步到公网
+// 一键同步到公网（异步执行，避免超时）
 app.post('/admin/sync', requireAuth, (req, res) => {
-  try {
-    const projectDir = __dirname;
-    // 1. 重新生成静态站点
-    execSync('node scripts/generate-static.js', { cwd: projectDir, timeout: 120000 });
-    // 2. git add + commit + push
-    execSync('git add -A', { cwd: projectDir, timeout: 10000 });
-    execSync('git commit -m "同步更新"', { cwd: projectDir, timeout: 10000 });
-    execSync('git push', { cwd: projectDir, timeout: 120000 });
-    res.redirect('/admin?synced=1');
-  } catch (err) {
-    console.error('同步失败:', err.message);
-    res.send('<h3>同步失败</h3><p>' + err.message + '</p><a href="/admin">返回</a>');
-  }
+  const projectDir = __dirname;
+  const cmd = 'node scripts/generate-static.js && git add -A && git commit -m "同步更新" && git push';
+  exec(cmd, { cwd: projectDir, timeout: 600000 }, (err, stdout, stderr) => {
+    if (err) {
+      console.error('同步失败:', err.message);
+    } else {
+      console.log('同步成功:', stdout.substring(stdout.length - 200));
+    }
+  });
+  // 立刻返回，不等结果
+  setTimeout(() => res.redirect('/admin?synced=1'), 500);
 });
 
 // ==================== 启动服务器 ====================
