@@ -446,11 +446,11 @@ app.post('/admin/sync', requireAuth, (req, res) => {
   try {
     const projectDir = __dirname;
     // 1. 重新生成静态站点
-    execSync('node scripts/generate-static.js', { cwd: projectDir, timeout: 30000 });
+    execSync('node scripts/generate-static.js', { cwd: projectDir, timeout: 120000 });
     // 2. git add + commit + push
     execSync('git add -A', { cwd: projectDir, timeout: 10000 });
     execSync('git commit -m "同步更新"', { cwd: projectDir, timeout: 10000 });
-    execSync('git push', { cwd: projectDir, timeout: 30000 });
+    execSync('git push', { cwd: projectDir, timeout: 120000 });
     res.redirect('/admin?synced=1');
   } catch (err) {
     console.error('同步失败:', err.message);
