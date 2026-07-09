@@ -445,12 +445,12 @@ app.post('/admin/delete/:id', requireAuth, (req, res) => {
 // 一键同步到公网（异步执行，避免超时）
 app.post('/admin/sync', requireAuth, (req, res) => {
   const projectDir = __dirname;
-  const cmd = 'node scripts/generate-static.js && git add -A && git -c user.name="ActivityBoard" -c user.email="board@activity.local" commit -m "同步更新" || true && git push';
+  const cmd = 'node scripts/generate-static.js && git add -A && git -c user.name="ActivityBoard" -c user.email="board@activity.local" commit --allow-empty -m "同步更新" && git push';
   exec(cmd, { cwd: projectDir, timeout: 600000 }, (err, stdout, stderr) => {
     if (err) {
-      console.error('同步失败:', err.message);
+      console.error('同步失败:', err.message, stderr);
     } else {
-      console.log('同步成功:', stdout.substring(stdout.length - 200));
+      console.log('同步成功');
     }
   });
   // 立刻返回，不等结果
